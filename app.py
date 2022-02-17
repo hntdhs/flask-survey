@@ -28,6 +28,23 @@ def start_survey():
 
     return redirect("/questions/0")
 
+app.route("/answer", methods=["POST"])
+def handle_question():
+
+    #pulls user answer for question and saves it to a variable to append
+    choice = request.form['answer']
+
+    # adds user response to the session
+    responses = session[RESPONSES_KEY]
+    responses.append(choice)
+    session[RESPONSES_KEY] = responses
+
+    if(len(responses) == len(survey.questions)):
+        return redirect("/complete")
+
+    else:
+        return redirect(f"/questions/{len(responses)}")
+
 @app.route("/questions/<int:qid>")
 def show_question(qid):
     """Show current question"""
@@ -46,23 +63,6 @@ def show_question(qid):
 
     question = survey.questions[qid]
     return render_template("question.html", question_num=qid, question=question)
-
-app.route("/answer", methods=["POST"])
-def handle_question():
-
-    #pulls user answer for question and saves it to a variable to append
-    choice = request.form['answer']
-
-    # adds user response to the session
-    responses = session[RESPONSES_KEY]
-    responses.append(choice)
-    session[RESPONSES_KEY] = responses
-
-    if(len(responses) == len(survey.questions)):
-        return redirect("/complete")
-
-    else:
-        return redirect(f"/questions/{len(responses)}")
 
 @app.route("/complete")
 def complete():
