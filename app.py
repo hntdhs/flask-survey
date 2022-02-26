@@ -28,7 +28,7 @@ def start_survey():
 
     return redirect("/questions/0")
 
-app.route("/answer", methods=["POST"])
+@app.route("/answer", methods=["POST"])
 def handle_question():
 
     #pulls user answer for question and saves it to a variable to append
